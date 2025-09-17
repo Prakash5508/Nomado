@@ -60,7 +60,7 @@ function Footer() {
                 <div className='text-center'>
                    <h5>Follow Us</h5>
                    <p>For Exclusive Offer </p>
-                   <ul className='list-unstyled text-center mt-2'>
+                   <ul className='list-unstyled  mt-2'>
                     <li>
                     <Link to="/">
                     <i className='bi bi-facebook'></i>
