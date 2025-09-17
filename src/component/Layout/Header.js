@@ -1,59 +1,85 @@
 import { useContext, useEffect, useState } from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import { AuthContext } from "../../context/AuthContext";
+import { CartContext } from "../../context/CartContext";
+import MiniCart from "../cart/MiniCart";
 import "../../styles/HeaderStyle.css";
 
 function Header({ cart = [] }) {
   const [nav, setNav] = useState(false);
+  const [expanded, setExpanded] = useState(false); // 👈 toggle control
   const { user, logout } = useContext(AuthContext);
+  const { count } = useContext(CartContext);
+  const [showMini, setShowMini] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const changeValueScroll = () => {
-      const scrollValue = document.documentElement.scrollTop;
-      setNav(scrollValue >= 80);
-    };
-
+    const changeValueScroll = () => setNav(document.documentElement.scrollTop >= 80);
     window.addEventListener("scroll", changeValueScroll);
     return () => window.removeEventListener("scroll", changeValueScroll);
   }, []);
 
+  // 👇 nav close function
+  const handleCloseNav = () => setExpanded(false);
+
+   const handleNavClick = (path) => {
+    navigate(path);
+    setExpanded(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header>
-      <Navbar collapseOnSelect expand="lg" className={nav ? "sticky" : ""}>
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        className={nav ? "sticky" : ""}
+        expanded={expanded} // 👈 control expansion
+      >
         <Container>
           {/* Logo */}
           <Navbar.Brand as="div">
-            <Link to="/" className="logo">
+            <Link to="/" className="logo" onClick={handleCloseNav}>
               <img src={Logo} alt="Logo" className="img-fluid logo-img" />
             </Link>
           </Navbar.Brand>
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          {/* Toggle Button */}
+          <Navbar.Toggle
+            aria-controls="responsive-navbar-nav"
+            onClick={() => setExpanded(expanded ? false : true)}
+          >
+            {expanded ? (
+              <span style={{ fontSize: "2rem", lineHeight: "1rem" }}>&times;</span> // 👈 Close icon
+            ) : (
+              <span className="navbar-toggler-icon"></span> // 👈 Default icon
+            )}
+          </Navbar.Toggle>
+
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ms-auto align-items-center">
-              <Nav.Link as={Link} to="/">Home</Nav.Link>
-              <Nav.Link as={Link} to="/about">About</Nav.Link>
-              <Nav.Link as={Link} to="/menu">Our Menu</Nav.Link>
-              <Nav.Link as={Link} to="/shop">Shop</Nav.Link>
-              <Nav.Link as={Link} to="/blog">Blog</Nav.Link>
-              <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+              <Nav.Link onClick={() => handleNavClick("/")}>Home</Nav.Link>
+            <Nav.Link onClick={() => handleNavClick("/about")}>About</Nav.Link>
+            <Nav.Link onClick={() => handleNavClick("/menu")}>Our Menu</Nav.Link>
+            <Nav.Link onClick={() => handleNavClick("/shop")}>Shop</Nav.Link>
+            <Nav.Link onClick={() => handleNavClick("/blog")}>Blog</Nav.Link>
+            <Nav.Link onClick={() => handleNavClick("/contact")}>Contact</Nav.Link>
 
               {/* 🛒 Cart Icon with Safe Count */}
-              <Nav.Link as={Link} to="/cart" className="position-relative">
-                <div className="cart d-flex align-items-center">
-                  <i className="bi bi-bag fs-5"></i>
-                  {cart?.length > 0 && (
-                    <em className="roundpoint">{cart.length}</em>
-                  )}
+              <Nav.Link as={Link}  className="position-relative" onClick={handleCloseNav}>
+                <div className="nav-item ms-3">
+                  <Button variant="link" className="position-relative p-0" onClick={() => setShowMini(true)}>
+                    <i className="bi bi-bag fs-4" ></i>
+                    {count() > 0 && <span className="roundpoint">{count()}</span>}
+                  </Button>
                 </div>
               </Nav.Link>
 
               {/* 👤 User Login / Profile */}
               {!user ? (
-                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/login" onClick={handleCloseNav}>Login</Nav.Link>
               ) : (
                 <NavDropdown
                   title={
@@ -70,14 +96,16 @@ function Header({ cart = [] }) {
                   }
                   id="profile-dropdown"
                   align="end"
+                  onClick={handleCloseNav} // 👈 close on select
                 >
-                  <NavDropdown.Item as={Link} to="/profile">
+                  <NavDropdown.Item as={Link} to="/profile" onClick={handleCloseNav}>
                     Profile
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item
                     onClick={() => {
                       logout();
+                      handleCloseNav();
                       navigate("/");
                     }}
                   >
@@ -89,6 +117,7 @@ function Header({ cart = [] }) {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <MiniCart show={showMini} onHide={() => setShowMini(false)} />
     </header>
   );
 }

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Modal, Form, Nav } from "react-bootstrap";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "../styles/HomeStyle.css";
 import patty from "../assets/parallax/patty.webp";
 import burger1 from "../assets/parallax/burger.webp";
 import burger2 from "../assets/parallax/patty.webp";
-import burger3 from "../assets/menu/burger-12.jpg"
+import burger3 from "../assets/menu/burger-12.jpg";
 import pizza1 from "../assets/parallax/pizza.jpg";
 import pizza2 from "../assets/menu/pizza1.webp";
 import veggie from "../assets/menu/veggie.avif";
@@ -17,8 +19,7 @@ import coffee from "../assets/menu/coffie.jpg";
 import mojito from "../assets/menu/mojito.webp";
 import cola from "../assets/menu/cola.png";
 
-
-function Menu({ cart, setCart }) {
+function Menu() {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -66,16 +67,20 @@ function Menu({ cart, setCart }) {
     setCustomization({ extraCheese: false, extraFries: false, spicy: false });
     setShowModal(true);
   };
-
+const { addItem } = useContext(CartContext);
   const addToCart = () => {
-    const order = {
-      ...selectedItem,
-      quantity,
-      customization,
-    };
-    setCart([...cart, order]);
-    setShowModal(false);
+  const order = {
+    id: selectedItem.id,
+    name: selectedItem.name,
+    price: selectedItem.price,
+    img: selectedItem.img,
+    quantity,
+    customization,
   };
+  addItem(order);
+  setShowModal(false);
+};
+
 
   return (
     <div className="menu-page">
@@ -89,7 +94,7 @@ function Menu({ cart, setCart }) {
 
       {/* Category Tabs */}
       <Container className="mt-5">
-        <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+        <Nav variant="tabs" className="justify-content-center menu-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
           <Nav.Item><Nav.Link eventKey="All">All</Nav.Link></Nav.Item>
           {Object.keys(categories).map((cat) => (
             <Nav.Item key={cat}><Nav.Link eventKey={cat}>{cat}</Nav.Link></Nav.Item>
@@ -97,7 +102,7 @@ function Menu({ cart, setCart }) {
         </Nav>
       </Container>
 
-      {/* Category-wise Menu (with filtering) */}
+      {/* Product Grid (Filter by Tabs) */}
       <section className="menu-section">
         <Container>
           <Row>
@@ -110,7 +115,7 @@ function Menu({ cart, setCart }) {
                   <Card.Body className="text-center">
                     <Card.Title className="fw-bold">{item.name}</Card.Title>
                     <Card.Text className="text-danger fw-bold">₹ {item.price}</Card.Text>
-                    <Button variant="dark" className="order-btn" onClick={() => handleOrderClick(item)}>
+                    <Button variant="danger" className="order-btn" onClick={() => handleOrderClick(item)}>
                       Order Now
                     </Button>
                   </Card.Body>
@@ -145,7 +150,7 @@ function Menu({ cart, setCart }) {
         <div className="overlay-dark">
           <Container>
             <h2 className="section-title text-white" data-aos="fade-up">Why Choose Us? 🍴</h2>
-            <Row className="text-center">
+            <Row className="text-center g-4">
               <Col md={4} data-aos="zoom-in">
                 <Card className="choose-card">
                   <Card.Body>

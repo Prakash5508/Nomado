@@ -141,7 +141,7 @@ function About() {
       {/* Call to Action */}
       <section className="cta-section">
         <h2 data-aos="zoom-in">Ready to Taste Happiness?</h2>
-        <Button variant="danger" size="lg">Order Now 🍔</Button>
+        <Button variant="danger" size="lg" href="/menu">Order Now 🍔</Button>
       </section>
     </div>
   );

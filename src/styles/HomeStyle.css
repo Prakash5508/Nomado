@@ -1,3 +1,7 @@
+html, body {
+  overflow-x: hidden; /* horizontal scroll disable */
+}
+
 .pratag {
   color: var(--light-grey);
 }
@@ -370,11 +374,11 @@ footer .calling {
   text-decoration: none;
 }
 footer ul li {
-  display: inline-block;
-  margin-right: 20px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  
+ display: flex;
+  justify-content: center;  
+  align-items: center;
+  padding: 0;
+  margin: 0 auto;
 }
 
 footer .copy {
@@ -399,6 +403,22 @@ footer .copy ul li:not(:last-child)::after {
   position: absolute;
   right: -10px;
   color: gray;  
+}
+footer ul {
+  display: flex;
+  justify-content: center; 
+  padding: 0;
+  margin: 0;
+}
+
+footer ul li a {
+  font-size: 1.3rem;
+  color: gray;
+  transition: color 0.3s ease;
+}
+
+footer ul li a:hover {
+  color: var(--yellow); 
 }
 
 /* Scroll to top button */
@@ -546,7 +566,7 @@ footer .copy ul li:not(:last-child)::after {
 
 .menu-hero {
   background: url("../assets/parallax/menu.png") no-repeat center/cover;
-  height: 50vh;
+  height: 100vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -556,9 +576,11 @@ footer .copy ul li:not(:last-child)::after {
 .hero-overlay {
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  padding: 40px;
-  border-radius: 10px;
+  padding: 50px;
+  text-align: center;
+  border-radius: 12px;
 }
+
 
 .hero-overlay h1 {
   font-size: 3rem;
@@ -571,28 +593,26 @@ footer .copy ul li:not(:last-child)::after {
 
 /* Category Tabs */
 .menu-tabs .nav-link {
-  margin: 0 10px;
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  margin: 10px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  color: #333;
 }
 
 .menu-tabs .nav-link.active {
   background: #dc3545;
-  color: #fff !important;
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(220,53,69,0.18);
 }
 
 /* Menu Cards */
+.menu-section{ padding: 60px 0; background: #fff; }
 .menu-card {
-  margin-bottom: 25px;
   border: none;
-  border-radius: 15px;
+  border-radius: 12px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-align: center;
+  transition: transform .3s ease, box-shadow .3s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
 .menu-card:hover {
@@ -663,11 +683,13 @@ footer .copy ul li:not(:last-child)::after {
   margin-top: 60px;
 }
 .choose-card {
-  padding: 30px;
+   padding: 30px;
+  margin: 15px 0;   /* 🔥 space between cards */
   background: #fff;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
+  height: 100%;
 }
 .choose-card:hover {
   transform: translateY(-10px);
@@ -791,5 +813,26 @@ footer .copy ul li:not(:last-child)::after {
   .brand_section .brand_img {
     width: 70px;
     height: auto;
+  }
+  .parallax-section .special-bg .row {
+    text-align: center;
+  }
+  .parallax-section .special-bg img {
+    margin-bottom: 20px;
+  }
+  .testimonials{
+    padding: 20px 0;
+    overflow: hidden;
+  }
+  .testimonials p {
+    font-size: 16px;
+    overflow: hidden;
+    padding: 0 10px;
+  }
+}
+@media (max-width: 576px) {
+  footer ul {
+    flex-wrap: wrap; 
+    gap: 1px;
   }
 }
